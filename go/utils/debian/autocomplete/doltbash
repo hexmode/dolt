@@ -1,0 +1,42 @@
+# Bash completion for dolt command
+# Generated for Debian package
+
+_dolt()
+{
+    local cur prev words cword
+    _init_completion || return
+
+    local commands="
+        init,status,add,diff,reset,clean,commit,sql,sql-server,log,show,branch
+        checkout,merge,conflicts,cherry-pick,revert,clone,fetch,pull,push
+        config,remote,backup,login,creds,ls,schema,table,tag,stash,blame
+        diff,log,ls-files,version,help,gen-zsh,migrate,login,creds,remotes
+        backups,gc,filter-branch,dump,constraints,read,version"
+
+    case "$prev" in
+        dolt)
+            COMPREPLY=($(compgen -W "$commands" -- "$cur"))
+            return
+            ;;
+        checkout|branch)
+            # Would need to query dolt for branch names
+            return
+            ;;
+        sql-server)
+            COMPREPLY=($(compgen -W "--config --host --port --user --password --timeout" -- "$cur"))
+            return
+            ;;
+    esac
+
+    if [[ "$cur" == -* ]]; then
+        COMPREPLY=($(compgen -W "$(_parse_help $1)" -- "$cur"))
+    fi
+} && complete -F _dolt dolt
+
+# Local variables:
+# mode: shell-script
+# sh-basic-offset: 4
+# sh-indent-comment: t
+# indent-tabs-mode: nil
+# End:
+# ex: ts=4 sw=4 et filetype=sh

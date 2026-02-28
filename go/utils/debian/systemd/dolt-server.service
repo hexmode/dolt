@@ -1,0 +1,39 @@
+[Unit]
+Description=Dolt SQL Server (MySQL-compatible)
+Documentation=https://docs.dolthub.com/
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=dolt
+Group=dolt
+
+# Data directory for Dolt databases
+Environment=DOLT_DATA_DIR=/var/lib/dolt
+
+# Run the dolt sql-server
+ExecStart=/usr/bin/dolt sql-server --host=0.0.0.0 --port=3307
+
+# Use systemd's restart mechanism
+Restart=on-failure
+RestartSec=5
+
+# Security hardening
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/dolt /var/log/dolt
+
+# Create directories if they don't exist
+RuntimeDirectory=dolt
+RuntimeDirectoryMode=0755
+
+# Logging
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=dolt
+
+[Install]
+WantedBy=multi-user.target
