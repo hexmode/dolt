@@ -1,0 +1,46 @@
+# Debian-specific information for dolt
+
+Dolt for Debian
+===============
+
+This package provides the Dolt SQL database with Git-like version control.
+
+INSTALLATION
+------------
+
+After installing the dolt package, you can:
+
+1. Run dolt CLI:
+   $ dolt --help
+
+2. Start the SQL server:
+   $ sudo systemctl start dolt-server
+
+3. Enable auto-start on boot:
+   $ sudo systemctl enable dolt-server
+
+CONFIGURATION
+-------------
+
+Configuration files can be placed in:
+- /etc/dolt/servercfg.d/ - Server configuration (YAML files)
+- /etc/dolt/doltcfg.d/  - Global client configuration
+
+DATA DIRECTORY
+--------------
+
+Default data directory: /var/lib/dolt
+Log directory: /var/log/dolt
+
+The dolt-server runs as the 'dolt' user by default.
+
+PORT
+----
+
+The default port is 3307 (to avoid conflicts with MySQL on 3306).
+
+SEE ALSO
+--------
+
+- Dolt documentation: https://docs.dolthub.com/
+- GitHub: https://github.com/dolthub/dolt

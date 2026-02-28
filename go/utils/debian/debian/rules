@@ -1,0 +1,40 @@
+#!/usr/bin/make -f
+
+# Debian packaging rules for dolt
+# Follows Debian Go packaging best practices
+
+# Get the project root directory (go/utils/debian/debian -> project root)
+PROJECT_ROOT := $(CURDIR)/../../..
+
+export DH_GOLANG_EXCLUDED_VENDOR_PATHS =
+export DH_GOLANG_BUILD_DIRS = go/cmd/dolt
+
+%:
+	dh $@ --buildsystem=golang
+
+override_dh_auto_build:
+	# Build dolt binary
+	cd $(PROJECT_ROOT)/go && go build -buildmode=pie -o $(CURDIR)/debian/dolt ./cmd/dolt
+
+override_dh_auto_test:
+	# Skip tests during package build
+	:
+
+override_dh_install:
+	# Install dolt binary
+	install -D -m 0755 debian/dolt $(DESTDIR)/usr/bin/dolt
+
+	# Install bash completion
+	install -d $(DESTDIR)/usr/share/bash-completion/completions
+	install -m 0644 $(PROJECT_ROOT)/utils/debian/autocomplete/doltbash $(DESTDIR)/usr/share/bash-completion/completions/dolt
+
+	# Install default config
+	install -d $(DESTDIR)/etc/dolt/servercfg.d
+	install -m 0644 $(PROJECT_ROOT)/utils/debian/systemd/default_config.yaml $(DESTDIR)/etc/dolt/servercfg.d/default.yaml
+
+# Use dh_installsystemd instead of dh --with=systemd (deprecated in compat >= 11)
+override_dh_installsystemd:
+	# Install and enable the systemd service
+	dh_installsystemd --name=dolt-server
+
+.PHONY: override_dh_auto_build override_dh_auto_test override_dh_install override_dh_installsystemd

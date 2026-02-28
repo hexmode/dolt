@@ -1,0 +1,25 @@
+Source: dolt
+Section: database
+Priority: optional
+Maintainer: DoltHub <opensource@dolthub.com>
+Build-Depends: debhelper-compat (= 13), golang-go (>= 1.20), dh-golang
+Standards-Version: 4.6.2
+Homepage: https://github.com/dolthub/dolt
+Vcs-Git: https://github.com/dolthub/dolt.git
+Vcs-Browser: https://github.com/dolthub/dolt
+
+Package: dolt
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: Git for Data - MySQL-compatible SQL database
+ Dolt is a MySQL-compatible SQL database with Git-like version control.
+ It provides branch, merge, diff, clone, push, and pull on SQL tables.
+ .
+ This package contains the dolt command line tool and SQL server.
+
+Package: dolt-server
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}, dolt (= ${binary:Version}), systemd
+Description: Dolt SQL Server as a systemd service
+ This package provides the systemd service configuration for running
+ Dolt SQL Server as a system service.

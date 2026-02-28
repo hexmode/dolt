@@ -1,0 +1,49 @@
+#!/bin/bash
+# Post-installation script for dolt
+
+set -e
+
+case "$1" in
+    configure)
+        # Create necessary directories
+        mkdir -p /var/lib/dolt
+        mkdir -p /var/log/dolt
+        mkdir -p /etc/dolt/servercfg.d
+        mkdir -p /etc/dolt/doltcfg.d
+
+        # Set proper permissions
+        if [ -d /var/lib/dolt ]; then
+            chmod 755 /var/lib/dolt
+        fi
+        if [ -d /var/log/dolt ]; then
+            chmod 755 /var/log/dolt
+        fi
+
+        # Create dolt user if it doesn't exist
+        if ! id dolt >/dev/null 2>&1; then
+            useradd --system --home /var/lib/dolt --shell /bin/false --comment "Dolt SQL Database User" dolt || true
+            usermod -d /var/lib/dolt dolt 2>/dev/null || true
+        fi
+
+        # Ensure dolt user owns the data directory
+        chown dolt:dolt /var/lib/dolt 2>/dev/null || true
+        chown dolt:dolt /var/log/dolt 2>/dev/null || true
+
+        # Reload systemd if available
+        if command -v systemctl >/dev/null 2>&1; then
+            systemctl daemon-reload 2>/dev/null || true
+        fi
+        ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+        ;;
+    
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+        ;;
+esac
+
+#DEBHELPER#
+
+exit 0

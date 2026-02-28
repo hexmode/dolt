@@ -1,0 +1,10 @@
+# Exclude build artifacts from git
+go/utils/debian/debian/tmp/ export-ignore
+go/utils/debian/debian/.debhelper/ export-ignore
+go/utils/debian/obj-* export-ignore
+
+# Exclude .gitignore entries that shouldn't be packaged
+# .gitignore is already included for reference
+
+# Debian packaging files
+go/utils/debian/debian/ export-dir=debian/

@@ -1,0 +1,5 @@
+# What files to install
+usr/bin/dolt
+usr/bin/dolt-sql-server
+usr/share/bash-completion/completions/dolt
+etc/dolt/servercfg.d/default.yaml
